@@ -1,0 +1,34 @@
+name: Image Upscaler
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'upscale_image.sh'
+      - '**/*.jpg'
+      - '**/*.png'
+
+jobs:
+  upscale-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker.io
+
+      - name: Run Image Upscaler Script
+        run: |
+          chmod +x ./upscale_image.sh
+          ./upscale_image.sh
+
+      - name: Upload Output Image
+        uses: actions/upload-artifact@v2
+        with:
+          name: upscaled-image
+          path: ./output_image.png
